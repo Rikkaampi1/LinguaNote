@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block title %}Study – {{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+  <h1 class="mb-3">Study Session</h1>
+  <p class="text-muted">
+    Project:
+    <a href="{{ url_for('project_detail', project_id=project.id) }}">{{ project.name }}</a><br>
+    Words to review today: <strong>{{ count }}</strong>
+  </p>
+
+  {% if words and count > 0 %}
+    <div id="study-card" class="card mb-4" style="max-width: 600px;">
+      <div class="card-body text-center">
+        <h3 id="word-term" class="mb-3">{{ words[0].term }}</h3>
+        <p id="word-context" class="text-muted mb-3">
+          <em>"{{ words[0].context or 'No context' }}"</em>
+        </p>
+
+        <div id="answer-section" style="display: none;">
+          <hr>
+          <h4 class="text-primary" id="word-translation">
+            {{ words[0].translation or 'No translation' }}
+          </h4>
+          <p class="text-muted">
+            Interval: <span id="current-interval">{{ words[0].interval }}</span> days
+          </p>
+        </div>
+
+        <div class="mt-4">
+          <button id="btn-show" class="btn btn-primary btn-lg">Show Answer</button>
+          <div id="review-buttons" style="display: none;">
+            <button class="btn btn-danger btn-lg mr-2" onclick="review(false)">Again</button>
+            <button class="btn btn-success btn-lg" onclick="review(true)">Good</button>
+            <button class="btn btn-outline-secondary btn-sm" id="btn-remove">Remove from study</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="finished-message" style="display: none;">
+      <h3 class="text-success">All done for today!</h3>
+      <a href="{{ url_for('project_detail', project_id=project.id) }}" class="btn btn-primary">
+        Back to project
+      </a>
+    </div>
+
+  {% else %}
+    <div class="alert alert-info">
+      <h4>No words to review today!</h4>
+      <p>Use the editor to add new words and schedule them for study.</p>
+      <a href="{{ url_for('project_detail', project_id=project.id) }}"
+         class="btn btn-primary">Back to project</a>
+    </div>
+  {% endif %}
+</div>
+
+{% if words and count > 0 %}
+<script>
+  const words = JSON.parse('{{ words | tojson | safe }}');
+  let currentIndex = 0;
+
+  function showCard() {
+    if (currentIndex >= words.length) {
+      document.getElementById('study-card').style.display = 'none';
+      document.getElementById('finished-message').style.display = 'block';
+      return;
+    }
+
+    const word = words[currentIndex];
+    document.getElementById('word-term').textContent = word.term;
+    document.getElementById('word-context').textContent = '"' + (word.context || 'No context') + '"';
+    document.getElementById('word-translation').textContent = word.translation || 'No translation';
+    document.getElementById('current-interval').textContent = word.interval;
+
+    document.getElementById('answer-section').style.display = 'none';
+    document.getElementById('btn-show').style.display = 'inline-block';
+    document.getElementById('review-buttons').style.display = 'none';
+  }
+
+  const btnShow = document.getElementById('btn-show');
+  if (btnShow) {
+    btnShow.addEventListener('click', function () {
+      document.getElementById('answer-section').style.display = 'block';
+      document.getElementById('btn-show').style.display = 'none';
+      document.getElementById('review-buttons').style.display = 'block';
+    });
+  }
+
+  async function review(knewIt) {
+    const word = words[currentIndex];
+
+    await fetch(`/review/${word.id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ knew_it: knewIt })
+    });
+
+    currentIndex++;
+    showCard();
+  }
+
+  if (words.length > 0) {
+    showCard();
+  }
+</script>
+{% endif %}
+{% endblock %}

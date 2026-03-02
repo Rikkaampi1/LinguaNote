@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block title %}Glossary – {{ project.name }}{% endblock %}
+
+{% block content %}
+  <h1 class="mb-3">Glossary</h1>
+  <p class="text-muted">
+    Project: <a href="{{ url_for('project_detail', project_id=project.id) }}">{{ project.name }}</a>
+  </p>
+
+  {% if terms %}
+    <table class="table table-sm table-striped table-hover">
+      <thead>
+  <tr>
+    <th>Term</th>
+    <th>Translation</th>
+    <th>Context</th>
+    <th>Interval</th>
+    <th>Next review</th>
+    <th></th>
+  </tr>
+</thead>
+<tbody>
+  {% for t in terms %}
+    <tr id="term-row-{{ t.id }}">
+      <td>{{ t.term }}</td>
+      <td>{{ t.translation or '-' }}</td>
+      <td title="{{ t.context }}">
+        {% if t.context %}
+          {{ t.context[:60] }}{% if t.context|length > 60 %}…{% endif %}
+        {% else %}
+          <span class="text-muted">No context</span>
+        {% endif %}
+      </td>
+      <td>{{ t.interval or '-' }}</td>
+      <td>
+        {% if t.next_review %}
+          {{ t.next_review }}
+        {% else %}
+          <span class="text-muted">Not scheduled</span>
+        {% endif %}
+      </td>
+      <td class="text-right">
+        <button class="btn btn-sm btn-outline-danger"
+                onclick="deleteTerm('{{ t.id }}')">
+          Delete
+        </button>
+      </td>
+    </tr>
+  {% endfor %}
+</tbody>
+
+    </table>
+  {% else %}
+    <p class="text-muted">No terms yet. Use the editor to add some.</p>
+  {% endif %}
+  <script>
+  async function deleteTerm(id) {
+    if (!confirm("Delete this term from the glossary?")) {
+      return;
+    }
+
+    try {
+      const resp = await fetch(`/terms/${id}`, {
+        method: "DELETE"
+      });
+
+      if (!resp.ok) {
+        alert("Failed to delete term");
+        return;
+      }
+
+      const row = document.getElementById(`term-row-${id}`);
+      if (row) {
+        row.remove();
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error while deleting term");
+    }
+  }
+</script>
+{% endblock %}

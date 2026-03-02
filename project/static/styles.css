@@ -1,0 +1,157 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* чуть мягче тени */
+.card.shadow-sm {
+  box-shadow: 0 0.125rem 0.75rem rgba(15, 23, 42, 0.08);
+}
+
+.font-weight-semibold {
+  font-weight: 600;
+}
+
+/* Popup lookup */
+.lookup-popup {
+  position: fixed; /* ВАЖНО: было absolute */
+  z-index: 1050;
+  max-width: 360px;
+  min-width: 260px;
+  background: #ffffff;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(15,23,42,0.08);
+  box-shadow: 0 0.35rem 1rem rgba(15, 23, 42, 0.15);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.lookup-popup.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Высота */
+#original-text {
+  line-height: 1.6;
+}
+
+/* Кнопки-группы языков */
+.btn-group-toggle .btn {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+body.bg-light {
+  background: #f4f6fb;
+}
+
+/* navbar */
+.navbar.bg-primary {
+  background: linear-gradient(90deg, #0052cc, #007bff);
+}
+
+/* ссылки-проекты, тексты */
+a:hover {
+  text-decoration: none;
+}
+
+/* небольшие скругления кнопок */
+.btn {
+  border-radius: 0.35rem;
+}
+
+/* ховер по карточкам */
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.35rem 1.2rem rgba(15, 23, 42, 0.12);
+  transition: all 0.15s ease;
+}
+
+#lookup-content small.text-muted {
+  color: #6c757d !important;
+}
+
+#lookup-content textarea.form-control-sm {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  resize: vertical;
+}
+
+.editor-two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.editor-column {
+  min-width: 0;
+}
+
+.editor-column-source #original-text {
+  white-space: pre-wrap;
+}
+
+#translation-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+h1, h2, h3, .h1, .h2, .h3 {
+  letter-spacing: 0.02em;
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
+  letter-spacing: 0.03em;
+}
+
+a {
+  transition: color 0.15s ease;
+}
+
+a.nav-link:hover {
+  opacity: 0.85;
+}
+
+.btn:focus, .btn:active {
+  box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.25);
+}
+
+.list-group-item {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.card-body {
+  padding: 1rem 1.25rem;
+}
+
+#study-card {
+  border-radius: 0.75rem;
+  box-shadow: 0 0.35rem 1.2rem rgba(15, 23, 42, 0.12);
+}
+
+.editor-row {
+  height: calc(100vh - 140px); /* подгони под высоту навбара/отступов */
+}
+
+.editor-col {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.editor-left,
+.editor-right {
+  padding-bottom: 1rem;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  overflow: hidden; /* страницы больше не скроллится */
+}

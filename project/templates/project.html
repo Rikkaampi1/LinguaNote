@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h1 class="h4 mb-0">{{ project.name }}</h1>
+    {% if project.description %}
+      <p class="text-muted small mb-0">{{ project.description }}</p>
+    {% endif %}
+  </div>
+  <div>
+    <a href="{{ url_for('edit_project', project_id=project.id) }}"
+       class="btn btn-outline-secondary btn-sm mr-1">Edit</a>
+    <a href="{{ url_for('new_text', project_id=project.id) }}"
+       class="btn btn-primary btn-sm">+ New text</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card shadow-sm border-0 mb-3">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <span class="font-weight-semibold">Texts</span>
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for t in texts %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <a href="{{ url_for('editor', text_id=t.id) }}">{{ t.title }}</a>
+              <div class="text-muted small">Created {{ t.created_at }}</div>
+            </div>
+            <a href="{{ url_for('edit_text', text_id=t.id) }}" class="btn btn-sm btn-outline-secondary">
+              Edit
+            </a>
+          </li>
+        {% else %}
+          <li class="list-group-item text-muted small">
+            No texts yet. Create your first one.
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0 mb-3 card-hover">
+      <div class="card-body">
+        <h5 class="card-title mb-2">Study</h5>
+        <p class="card-text text-muted small mb-2">
+          Terms in this project: <strong>{{ terms_count }}</strong><br>
+          Due for review today: <strong class="{% if due_count > 0 %}text-danger{% else %}text-success{% endif %}">
+          {{ due_count }}
+        </strong>
+        </p>
+        <a href="{{ url_for('study', project_id=project.id) }}"
+            class="btn btn-info btn-block mb-2">
+          Study due today
+        </a>
+        <a href="{{ url_for('study_all', project_id=project.id) }}"
+            class="btn btn-outline-info btn-block">
+          Study all scheduled
+        </a>
+        <a href="{{ url_for('project_terms', project_id=project.id) }}"
+            class="btn btn-outline-secondary btn-block">
+          View glossary
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

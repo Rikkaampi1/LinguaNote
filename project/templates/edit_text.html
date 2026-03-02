@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}Edit Text – {{ project.name }}{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">Edit Text</h1>
+  <p class="text-muted">
+    Project:
+    <a href="{{ url_for('project_detail', project_id=project.id) }}">{{ project.name }}</a>
+  </p>
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+
+  <form method="post">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input class="form-control" id="title" name="title"
+             value="{{ title or '' }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="content">Original text</label>
+      <textarea class="form-control" id="content" name="content"
+                rows="10" required>{{ content or '' }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="{{ url_for('editor', text_id=text.id) }}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}
